@@ -56,10 +56,13 @@ def main():
     port = w_eq * rets["equity"].values + (1 - w_eq) * rets["bond"].values
     bench = 0.60 * rets["equity"].values + 0.40 * rets["bond"].values
 
-    print("\n--- Annualized performance ---")
+    from metrics import summary
+    print("\n--- Risk / return ---")
+    print(f"{'':14s} {'CAGR':>8} {'Vol':>7} {'Sharpe':>7} {'Sortino':>8} {'MaxDD':>7} {'Calmar':>7}")
     for name, series in [("Regime-aware", port), ("Static 60/40", bench)]:
-        a, v, s = ann_stats(pd.Series(series))
-        print(f"{name:14s} return={a:7.2%}  vol={v:6.2%}  Sharpe={s:5.2f}")
+        m = summary(series)
+        print(f"{name:14s} {m['CAGR']:8.2%} {m['Vol']:7.2%} {m['Sharpe']:7.2f} "
+              f"{m['Sortino']:8.2f} {m['MaxDD']:7.2%} {m['Calmar']:7.2f}")
 
 
 if __name__ == "__main__":
